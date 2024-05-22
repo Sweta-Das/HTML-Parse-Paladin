@@ -1,4 +1,4 @@
-# Grepsr - Technical Assessment
+# Technical Tasks
 
 **Task-1: Development Environment Setup**
 ● Select and configure an open-source LLM such as LLaMA 3, BERT, Vicuna or
@@ -21,3 +21,9 @@ location within the HTML structure.
 ● Format the extracted attributes and their respective selectors into a JSON
 structure.
 ● Ensure the API returns this JSON formatted data as a response to requests.
+
+
+# Solution
+
+**API endpoint creation**
+● Creating an API endpoint that can accept HTML block as input using FastAPI
