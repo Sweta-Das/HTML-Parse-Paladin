@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from src.core.html_cleaning import cleaning_HTML
+from src.utils.html_cleaning import cleaning_HTML
+from src.core.llm import llm_html_parsing
 
 
 # Applying FastAPI for endpoint
@@ -24,10 +25,16 @@ async def processing_html(html_input: str):
     try:
         # Parsing HTML with BeautifulSoup
         filepath = cleaning_HTML(html_input)
+
+        # Get response in str
+        res = llm_html_parsing(filepath)
+
+        # Formatting respose to get JSON result
+
         
         return {
             "message": "HTML content has been formatted and saved.",
-            "filename": filepath
+            "response": res
         }
 
     except Exception as e:
