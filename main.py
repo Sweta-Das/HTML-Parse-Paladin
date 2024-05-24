@@ -1,40 +1,69 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+import os
+from fastapi import FastAPI, HTTPException, Body
+from pydantic import BaseModel, Field
 from src.utils.html_cleaning import cleaning_HTML
 from src.core.llm import llm_html_parsing
+from src.utils.formatter import convert_to_json
 
 
 # Applying FastAPI for endpoint
 app = FastAPI()
 
-# Base Model
-class HTMLRequest(BaseModel):
-    """Class for sending HTML content."""
-    html: str
+class JSONResponse(BaseModel):
+    """JSON Response of HTML block"""
+    message: str
+    response: dict
+
+    model_config = {
+        "json_schema_extra": {
+            "examples" : [
+                {
+                    "message": "Result of HTML Parsing using LLM",
+                    "response": [
+                        {
+                            "product": "Coffee",
+                            "product_tag": ".productTitle",
+                            "price": "$ 20",
+                            "price_tag": ".regualarPrice",
+                            "desc": "Get refreshed and energized",
+                            "desc_tag": ".description > a",
+                            "img": "https://www.example.com/Coffee.jpg",
+                            "img_tag": ".titleImage"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
 
 # POST request
-@app.post("/process_html/")
-async def processing_html(html_input: str):
+@app.post("/parse_html/", response_model=JSONResponse)
+async def parsing_html(html_input: str):
     """
     Endpoint for processing HTML block.
+
     Args: 
-    - request: Request body containing HTML block
+    - html_input: HTML block or code snippet
+
     Returns:
     - dict: JSON formatted data
     """
     try:
-        # Parsing HTML with BeautifulSoup
+        # Cleaning HTML with BeautifulSoup
         filepath = cleaning_HTML(html_input)
 
         # Get response in str
         res = llm_html_parsing(filepath)
 
         # Formatting respose to get JSON result
+        frmt_res = convert_to_json(res)
 
+        # Removing the temporarily created file
+        os.remove(filepath)
         
         return {
-            "message": "HTML content has been formatted and saved.",
-            "response": res
+            "message": "Result of HTML Parsing using LLM",
+            "response": frmt_res
         }
 
     except Exception as e:

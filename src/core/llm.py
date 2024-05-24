@@ -20,8 +20,8 @@ def llm_html_parsing(filepath):
         # Assigning prompt
         template = """
         <|sys|>
-        You are an expert in Web Scraping, so you are capable to find the information in HTML and label them accordingly. 
-        Please return the final result in JSON following the below format:
+        You are an expert in Web Scraping of e-commerce website, so you are capable to find the information of product(s) in HTML and label them accordingly. 
+        Please return the final result in JSON following the format below:
         product: Name of the product
         product_tag: CSS selectors or Xpaths associated with product
         price: Price of the product
