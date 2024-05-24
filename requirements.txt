@@ -6,6 +6,7 @@ langchain
 langchain-community
 unstructured
 libmagic
+lxml
 torch
 python-dotenv
 huggingface_hub
