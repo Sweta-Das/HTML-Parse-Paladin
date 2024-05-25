@@ -3,7 +3,7 @@ import requests
 import streamlit as st
 
 # Assigning title to UI
-st.title("HTML Parse Paladin 🔍")
+st.title("LLM HTML Parser 🔍")
 
 # Description about the app
 st.write("An HTML Parsing app powered by LLM.")
