@@ -6,7 +6,7 @@ The detailed description of tasks performed by LLM HTML Parser is given below:
 # Technical Tasks
 
 **Task-1: Development Environment Setup**<br>
-- The LLM chosen to perform the parsing is Mistral AI (open-source) through Hugging Face Endpoint.
+- The LLM chosen to perform the parsing is Mixtral 8x7B (open-source) through Hugging Face Endpoint.
 - The framework selected for API implementation is FastAPI. 
 - Streamlit has been used to provide a clean and interactive web application at the frontend.
 
