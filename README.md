@@ -1,29 +1,23 @@
+# Introduction
+
+This project is designed to extract meaningful attributes from an HTML block of E-commerce websites using LLM. On extraction, the response from the LLM is formatted in JSON and produced as result.
+The detailed description of tasks performed by LLM HTML Parser is given below: 
+
 # Technical Tasks
 
 **Task-1: Development Environment Setup**<br>
-- Select and configure an open-source LLM such as LLaMA 3, BERT, Vicuna or
-any other suitable alternative.
-- Set up a development environment for API implementation using a framework
-like Flask or FastAPI.
+- The LLM chosen to perform the parsing is Mistral AI (open-source) through Hugging Face Endpoint.
+- The framework selected for API implementation is FastAPI. 
+- Streamlit has been used to provide a clean and interactive web application at the frontend.
 
 **Task-2: API Implementation** <br>
-- Create an API endpoint that accepts an HTML block as input.
-- Implement functionality within the API to utilize the chosen LLM for processing
-the HTML content.
+- The API endpoint that accepts HTML input is `/parse_html/`
+- The endpoint accepts the html block (code snippet) as string, which is then cleaned and processed using LLM to extract meaningful attributes.
 
 **Task-3: HTML Processing**<br>
-- Using ML, parse the HTML to identify and extract meaningful attributes relevant
-to e-commerce contexts (e.g., product names, prices, descriptions, images).
-- Identify the CSS selectors or Xpaths for each extracted attribute to pinpoint their
-location within the HTML structure.
+- The HTML blocks may contain about products, their prices, names, images associated with them along with some description.
+- LLM extracts all of these information (if present) from the block and their associated CSS selectors.
 
 **Task-4: Data Formatting and Output**<br>
-- Format the extracted attributes and their respective selectors into a JSON
-structure.
-- Ensure the API returns this JSON formatted data as a response to requests.
-
-
-# Solution
-
-**API endpoint creation**<br>
-- Creating an API endpoint that can accept HTML block as input using FastAPI
+- The response provided by LLM is in string format, which is further processed to extract only JSON outputs present within the braces `{}`.
+- To prevent errors, HTML blocks are to be fed in considerable size so that it won't raise 'max input token' issue. Also, sometimes the LLM may respond, but there may be error in streamlit due to incorrect JSON formatting. 

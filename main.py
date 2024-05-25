@@ -10,10 +10,12 @@ from src.utils.formatter import convert_to_json
 # Applying FastAPI for endpoint
 app = FastAPI()
 
+# Input Model Class
 class HTMLContent(BaseModel):
     """HTML Block Input"""
     content: str
 
+# Output Model Class
 class JSONResponse(BaseModel):
     """JSON Response of HTML block"""
     message: str
@@ -40,6 +42,7 @@ class JSONResponse(BaseModel):
             ]
         }
     }
+
 
 # POST request
 @app.post("/parse_html/", response_model=JSONResponse)
