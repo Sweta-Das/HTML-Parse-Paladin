@@ -15,3 +15,5 @@ and use streamlit to open web app: <br>
 ```streamlit run \path\to\streamlit.py```
 
 This will open a web app on the default browser where we can place the HTML block within the text area and click on `Parse HTML` to view the response.
+
+*P.S: For better UI experience and prevent errors, it's suggested to use streamlit rather than using FastAPI documentation because it may throw errors.* 
