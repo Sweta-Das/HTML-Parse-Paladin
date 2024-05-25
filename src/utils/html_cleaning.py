@@ -8,6 +8,7 @@ file_path = os.environ['filepath']
 
 def cleaning_HTML(html_input: str):
     try:
+        print(f"clean : {html_input}")
         # Preprocessing the HTML block
         soup = BeautifulSoup(html_input, "html.parser")
 

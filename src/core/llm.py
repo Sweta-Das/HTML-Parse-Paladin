@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-from langchain.llms import HuggingFaceEndpoint
+from langchain_community.llms import HuggingFaceEndpoint
 
 # Loading environment variables
 load_dotenv(find_dotenv())
@@ -44,7 +44,7 @@ def llm_html_parsing(filepath):
         conv = LLMChain(
             llm=llm,
             prompt=prompt,
-            verbose=True
+            verbose=False
         )
 
         # Reading HTML file
@@ -56,7 +56,33 @@ def llm_html_parsing(filepath):
             {"html": f"{html}"}
         )
 
-        return llm_response['text']
+        # Strictly JSON 
+        template2 = """
+        <|sys|>
+        Strictly parse the given text in JSON format.
+        </sys>
+        <|user|>
+        String: {response1}
+        </user>
+        <|sys|>
+        JSON: 
+        </sys>
+        """
+        prompt2 = PromptTemplate.from_template(template2)
+
+        conv2 = LLMChain(
+            llm=llm,
+            prompt=prompt2,
+            verbose=True
+        )
+
+        fin_response = conv2(
+            {"response1": f"{llm_response['text']}"}
+        )
+    
+        out_response = fin_response['text']
+        
+        return out_response
 
     except Exception as e:
         print(f"Error occurred while parsing the HTML content: {e}")

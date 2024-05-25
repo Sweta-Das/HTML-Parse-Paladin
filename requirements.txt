@@ -13,3 +13,4 @@ huggingface_hub
 transformers
 langchain_experimental
 ggshield
+streamlit

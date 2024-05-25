@@ -1,6 +1,7 @@
 import os
-from fastapi import FastAPI, HTTPException, Body
-from pydantic import BaseModel, Field
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Union, List, Dict
 from src.utils.html_cleaning import cleaning_HTML
 from src.core.llm import llm_html_parsing
 from src.utils.formatter import convert_to_json
@@ -9,10 +10,14 @@ from src.utils.formatter import convert_to_json
 # Applying FastAPI for endpoint
 app = FastAPI()
 
+class HTMLContent(BaseModel):
+    """HTML Block Input"""
+    content: str
+
 class JSONResponse(BaseModel):
     """JSON Response of HTML block"""
     message: str
-    response: dict
+    response: Union[Dict[str, str], List[Dict[str, str]]]
 
     model_config = {
         "json_schema_extra": {
@@ -38,7 +43,7 @@ class JSONResponse(BaseModel):
 
 # POST request
 @app.post("/parse_html/", response_model=JSONResponse)
-async def parsing_html(html_input: str):
+async def parsing_html(html_input: HTMLContent):
     """
     Endpoint for processing HTML block.
 
@@ -49,22 +54,28 @@ async def parsing_html(html_input: str):
     - dict: JSON formatted data
     """
     try:
+        
         # Cleaning HTML with BeautifulSoup
-        filepath = cleaning_HTML(html_input)
+        filepath = cleaning_HTML(html_input.content)
 
         # Get response in str
         res = llm_html_parsing(filepath)
-
+        
         # Formatting respose to get JSON result
         frmt_res = convert_to_json(res)
 
         # Removing the temporarily created file
-        os.remove(filepath)
+        # os.remove(filepath)
         
-        return {
-            "message": "Result of HTML Parsing using LLM",
-            "response": frmt_res
-        }
+        if "list" in frmt_res:
+            response = [frmt_res]
+        else:
+            response = frmt_res
+
+        return JSONResponse(
+            message="Result of HTML Parsing using LLM",
+            response=response
+        )
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"An error occurred while processing HTML block: {e}") from e
