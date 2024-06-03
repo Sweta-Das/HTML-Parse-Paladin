@@ -20,6 +20,8 @@ if st.button("Parse HTML"):
         res = requests.post(url, 
                             json={"content": html_code})
         
+        print(type(res))
+        
         if res.status_code == 200:
             st.subheader(f"Response from LLM :")
             st.json(res.json())

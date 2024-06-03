@@ -1,4 +1,5 @@
 import os
+import json
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Union, List, Dict
@@ -19,7 +20,7 @@ class HTMLContent(BaseModel):
 class JSONResponse(BaseModel):
     """JSON Response of HTML block"""
     message: str
-    response: Union[Dict[str, str], List[Dict[str, str]]]
+    response: Union[Dict[str, Union[str, int, float]], List[Dict[str, Union[str, int, float]]]]
 
     model_config = {
         "json_schema_extra": {
@@ -63,17 +64,20 @@ async def parsing_html(html_input: HTMLContent):
 
         # Get response in str
         res = llm_html_parsing(filepath)
-        
+
         # Formatting respose to get JSON result
         frmt_res = convert_to_json(res)
 
         # Removing the temporarily created file
         # os.remove(filepath)
         
-        if "list" in frmt_res:
-            response = [frmt_res]
+        json_response = json.loads(frmt_res)
+
+        # Check if the result is a dictionary or a list of dictionaries
+        if isinstance(json_response, list):
+            response = json_response
         else:
-            response = frmt_res
+            response = [json_response]
 
         return JSONResponse(
             message="Result of HTML Parsing using LLM",
